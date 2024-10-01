@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Question({ data, onNext, onIncorrect, onQuit, currentQuestionNumber, totalQuestions }) {
+function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestionNumber, totalQuestions }) {
   const [selectedOption, setSelectedOption] = useState('');
   const [showQuitModal, setShowQuitModal] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
@@ -16,7 +16,9 @@ function Question({ data, onNext, onIncorrect, onQuit, currentQuestionNumber, to
     }
     setIsCorrect(correct);
     setIsAnswered(true);
-    if (!correct) {
+    if (correct) {
+      onCorrect();
+    } else {
       onIncorrect(data);
     }
   };

@@ -7,6 +7,7 @@ function Quiz() {
   const { subjectId, chapter } = useParams();
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
+  const [correctCount, setCorrectCount] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [incorrectQuestions, setIncorrectQuestions] = useState(
     JSON.parse(localStorage.getItem(`incorrect_${subjectId}_${chapter}`)) || []
@@ -33,6 +34,10 @@ function Quiz() {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
   };
 
+  const handleCorrect = () => {
+    setCorrectCount(correctCount + 1);
+  };
+
   const handleIncorrect = (question) => {
     const updatedIncorrect = [...incorrectQuestions, question];
     setIncorrectQuestions(updatedIncorrect);
@@ -55,7 +60,9 @@ function Quiz() {
       ) : currentQuestionIndex >= questions.length ? (
         <div>
           <h1 className="text-xl font-bold mb-4">Quiz Completed!</h1>
-          <p>You have completed the quiz.</p>
+          <p className="mt-2 text-lg">
+            Your score: <strong>{correctCount} / {questions.length}</strong>
+          </p>
           <button
             className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
             onClick={handleQuit}
@@ -69,6 +76,7 @@ function Quiz() {
           onNext={handleNext}
           onQuit={handleQuit}
           onIncorrect={handleIncorrect}
+          onCorrect={handleCorrect}
           currentQuestionNumber={currentQuestionIndex + 1}
           totalQuestions={questions.length}
         />
