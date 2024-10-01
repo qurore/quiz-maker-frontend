@@ -61,6 +61,12 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
     }
   };
 
+  const handleMarkAsCorrect = () => {
+    setIsCorrect(true);
+    onCorrect();
+    handleNext();
+  };
+
   if (!data) {
     return <div>Loading question...</div>;
   }
@@ -116,29 +122,41 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
         >
           Quit
         </button>
-        {!isAnswered ? (
-          <button
-            className="p-2 bg-blue-500 text-white rounded w-20"
-            onClick={handleSkip}
-          >
-            Skip
-          </button>
-        ) : (
-          <button
-            className="p-2 bg-blue-500 text-white rounded w-20"
-            onClick={handleNext}
-          >
-            Next
-          </button>
-        )}
+        <div>
+          {isAnswered && !isCorrect && (
+            <button
+              className="p-2 bg-blue-200 text-black rounded w-40 mr-2"
+              onClick={handleMarkAsCorrect}
+            >
+              Mark as Correct
+            </button>
+          )}
+          {!isAnswered ? (
+            <button
+              className="p-2 bg-blue-500 text-white rounded w-20"
+              onClick={handleSkip}
+            >
+              Skip
+            </button>
+          ) : (
+            <button
+              className="p-2 bg-blue-500 text-white rounded w-20"
+              onClick={handleNext}
+            >
+              Next
+            </button>
+          )}
+        </div>
       </div>
       {isAnswered && (
         <div className="mt-4">
           {isCorrect ? (
             <div className="text-green-500">Correct! 🎉</div>
           ) : (
-            <div className="text-red-500">
-              Incorrect. The correct answer is: <strong>{getCorrectAnswerText()}</strong>
+            <div>
+              <div className="text-red-500">
+                Incorrect. The correct answer is: <strong>{getCorrectAnswerText()}</strong>
+              </div>
             </div>
           )}
           <p className="mt-2">{data.explanation}</p>
