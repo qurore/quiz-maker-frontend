@@ -42,8 +42,8 @@ function Quiz() {
     );
   };
 
-  const handleGoHome = () => {
-    navigate('/');
+  const handleQuit = () => {
+    navigate(`/quiz/${subjectId}`);
   };
 
   return (
@@ -67,8 +67,8 @@ function Quiz() {
         />
       )}
       <button
-        className="mt-4 p-2 bg-gray-500 text-white rounded"
-        onClick={handleGoHome}
+        className="mt-4 p-2 bg-gray-400 text-white rounded"
+        onClick={handleQuit}
       >
         Quit
       </button>
