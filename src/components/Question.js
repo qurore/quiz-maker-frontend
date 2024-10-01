@@ -1,19 +1,17 @@
 import { useState } from 'react';
 
-function Question({ data, onNext, onIncorrect }) {
+function Question({ data, onNext, onIncorrect, currentQuestionNumber, totalQuestions }) {
   const [selectedOption, setSelectedOption] = useState('');
   const [userAnswer, setUserAnswer] = useState('');
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
-  const checkAnswer = () => {
+  const checkAnswer = (selectedAnswer) => {
     let correct = false;
-    if (data.questionType === 'MCQ') {
-      correct = data.answer.includes(parseInt(selectedOption));
+    if (data.questionType === 'MCQ' || data.questionType === 'SA') {
+      correct = data.answer.includes(parseInt(selectedAnswer));
     } else if (data.questionType === 'FIB') {
-      correct = userAnswer.trim().toLowerCase() === data.answer[0].toLowerCase();
-    } else if (data.questionType === 'SA') {
-      correct = data.answer.includes(parseInt(selectedOption));
+      correct = selectedAnswer.trim().toLowerCase() === data.answer[0].toLowerCase();
     }
     setIsCorrect(correct);
     setIsAnswered(true);
@@ -22,12 +20,34 @@ function Question({ data, onNext, onIncorrect }) {
     }
   };
 
+  const getCorrectAnswerText = () => {
+    if (data.questionType === 'MCQ' || data.questionType === 'SA') {
+      return data.answer.map(answerIndex => data.options[answerIndex]).join(', ');
+    }
+    return data.answer.join(', ');
+  };
+
+  const handleNext = () => {
+    setSelectedOption('');
+    setUserAnswer('');
+    setIsAnswered(false);
+    setIsCorrect(false);
+    onNext();
+  };
+
+  const handleSkip = () => {
+    onNext();
+  };
+
   if (!data) {
     return <div>Loading question...</div>;
   }
 
   return (
     <div>
+      <div className="mb-2 text-gray-600">
+        Question {currentQuestionNumber} / {totalQuestions}
+      </div>
       <h2 className="text-lg font-semibold">{data.questionText}</h2>
       {(data.questionType === 'MCQ' || data.questionType === 'SA') && data.options ? (
         <div className="mt-4">
@@ -37,7 +57,12 @@ function Question({ data, onNext, onIncorrect }) {
               className={`block w-full text-left p-2 border mb-2 ${
                 selectedOption === key ? 'bg-blue-200' : ''
               }`}
-              onClick={() => setSelectedOption(key)}
+              onClick={() => {
+                if (!isAnswered) {
+                  setSelectedOption(key);
+                  checkAnswer(key);
+                }
+              }}
               disabled={isAnswered}
             >
               {value}
@@ -51,32 +76,38 @@ function Question({ data, onNext, onIncorrect }) {
             className="border p-2 w-full"
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
+            onBlur={() => {
+              if (!isAnswered) {
+                checkAnswer(userAnswer);
+              }
+            }}
             disabled={isAnswered}
           />
         </div>
       ) : (
         <div>Unsupported question type</div>
       )}
-      {!isAnswered ? (
+      {!isAnswered && (
         <button
-          className="mt-4 p-2 bg-green-500 text-white rounded"
-          onClick={checkAnswer}
+          className="mt-4 p-2 bg-blue-500 text-white rounded"
+          onClick={handleSkip}
         >
-          Submit
+          Skip
         </button>
-      ) : (
+      )}
+      {isAnswered && (
         <div className="mt-4">
           {isCorrect ? (
             <div className="text-green-500">Correct! 🎉</div>
           ) : (
             <div className="text-red-500">
-              Incorrect. The correct answer is: <strong>{data.answer.join(', ')}</strong>
+              Incorrect. The correct answer is: <strong>{getCorrectAnswerText()}</strong>
             </div>
           )}
           <p className="mt-2">{data.explanation}</p>
           <button
             className="mt-4 p-2 bg-blue-500 text-white rounded"
-            onClick={onNext}
+            onClick={handleNext}
           >
             Next
           </button>

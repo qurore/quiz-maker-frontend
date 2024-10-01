@@ -29,8 +29,6 @@ function Quiz() {
       });
   }, [subjectId, chapter]);
 
-  console.log(questions);
-
   const handleNext = () => {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
   };
@@ -64,13 +62,15 @@ function Quiz() {
           data={questions[currentQuestionIndex]}
           onNext={handleNext}
           onIncorrect={handleIncorrect}
+          currentQuestionNumber={currentQuestionIndex + 1}
+          totalQuestions={questions.length}
         />
       )}
       <button
-        className="mt-4 p-2 bg-blue-500 text-white rounded"
+        className="mt-4 p-2 bg-gray-500 text-white rounded"
         onClick={handleGoHome}
       >
-        Go Back to Home
+        Quit
       </button>
     </div>
   );
