@@ -2,31 +2,34 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Question from './Question';
+
 function Quiz() {
-  const { subjectId } = useParams();
+  const { subjectId, chapter } = useParams();
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
-  const [chapter, setChapter] = useState('');
-  const [numQuestions, setNumQuestions] = useState(10);
-  const [order, setOrder] = useState('sequential'); // or 'random'
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [incorrectQuestions, setIncorrectQuestions] = useState(
-    JSON.parse(localStorage.getItem(`incorrect_${subjectId}`)) || []
+    JSON.parse(localStorage.getItem(`incorrect_${subjectId}_${chapter}`)) || []
   );
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get('http://localhost:5001/api/questions', {
         params: { subjectId, chapter },
       })
       .then((response) => {
-        let fetchedQuestions = response.data;
-        if (order === 'random') {
-          fetchedQuestions.sort(() => Math.random() - 0.5);
-        }
-        setQuestions(fetchedQuestions.slice(0, numQuestions));
+        setQuestions(response.data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching questions:", error);
+        setIsLoading(false);
       });
-  }, [subjectId, chapter, numQuestions, order]);
+  }, [subjectId, chapter]);
+
+  console.log(questions);
 
   const handleNext = () => {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -36,17 +39,22 @@ function Quiz() {
     const updatedIncorrect = [...incorrectQuestions, question];
     setIncorrectQuestions(updatedIncorrect);
     localStorage.setItem(
-      `incorrect_${subjectId}`,
+      `incorrect_${subjectId}_${chapter}`,
       JSON.stringify(updatedIncorrect)
     );
   };
+
   const handleGoHome = () => {
     navigate('/');
   };
 
   return (
     <div className="container mx-auto p-4">
-      {currentQuestionIndex >= questions.length ? (
+      {isLoading ? (
+        <div>Loading questions...</div>
+      ) : questions.length === 0 ? (
+        <div>No questions available for this chapter.</div>
+      ) : currentQuestionIndex >= questions.length ? (
         <div>
           <h1 className="text-xl font-bold">Quiz Completed!</h1>
           <p>You have completed the quiz.</p>
@@ -67,4 +75,5 @@ function Quiz() {
     </div>
   );
 }
+
 export default Quiz;

@@ -8,10 +8,12 @@ function Question({ data, onNext, onIncorrect }) {
 
   const checkAnswer = () => {
     let correct = false;
-    if (data.type === 'MCQ') {
-      correct = selectedOption === data.answer;
-    } else {
-      correct = userAnswer.trim().toLowerCase() === data.answer.toLowerCase();
+    if (data.questionType === 'MCQ') {
+      correct = data.answer.includes(parseInt(selectedOption));
+    } else if (data.questionType === 'FIB') {
+      correct = userAnswer.trim().toLowerCase() === data.answer[0].toLowerCase();
+    } else if (data.questionType === 'SA') {
+      correct = data.answer.includes(parseInt(selectedOption));
     }
     setIsCorrect(correct);
     setIsAnswered(true);
@@ -20,25 +22,29 @@ function Question({ data, onNext, onIncorrect }) {
     }
   };
 
+  if (!data) {
+    return <div>Loading question...</div>;
+  }
+
   return (
     <div>
       <h2 className="text-lg font-semibold">{data.questionText}</h2>
-      {data.type === 'MCQ' ? (
+      {(data.questionType === 'MCQ' || data.questionType === 'SA') && data.options ? (
         <div className="mt-4">
-          {data.options.map((option, index) => (
+          {Object.entries(data.options).map(([key, value]) => (
             <button
-              key={index}
+              key={key}
               className={`block w-full text-left p-2 border mb-2 ${
-                selectedOption === option ? 'bg-blue-200' : ''
+                selectedOption === key ? 'bg-blue-200' : ''
               }`}
-              onClick={() => setSelectedOption(option)}
+              onClick={() => setSelectedOption(key)}
               disabled={isAnswered}
             >
-              {option}
+              {value}
             </button>
           ))}
         </div>
-      ) : (
+      ) : data.questionType === 'FIB' ? (
         <div className="mt-4">
           <input
             type="text"
@@ -48,6 +54,8 @@ function Question({ data, onNext, onIncorrect }) {
             disabled={isAnswered}
           />
         </div>
+      ) : (
+        <div>Unsupported question type</div>
       )}
       {!isAnswered ? (
         <button
@@ -62,7 +70,7 @@ function Question({ data, onNext, onIncorrect }) {
             <div className="text-green-500">Correct! 🎉</div>
           ) : (
             <div className="text-red-500">
-              Incorrect. The correct answer is: <strong>{data.answer}</strong>
+              Incorrect. The correct answer is: <strong>{data.answer.join(', ')}</strong>
             </div>
           )}
           <p className="mt-2">{data.explanation}</p>
