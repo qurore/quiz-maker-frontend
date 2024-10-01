@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 function Question({ data, onNext, onIncorrect, onQuit, currentQuestionNumber, totalQuestions }) {
   const [selectedOption, setSelectedOption] = useState('');
+  const [showQuitModal, setShowQuitModal] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
@@ -39,18 +40,37 @@ function Question({ data, onNext, onIncorrect, onQuit, currentQuestionNumber, to
     onNext();
   };
 
+  const handleQuitClick = () => {
+    setShowQuitModal(true);
+  };
+
+  const handleConfirmQuit = () => {
+    setShowQuitModal(false);
+    onQuit();
+  };
+
+  const handleCancelQuit = () => {
+    setShowQuitModal(false);
+  };
+
+  const handleOutsideClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setShowQuitModal(false);
+    }
+  };
+
   if (!data) {
     return <div>Loading question...</div>;
   }
 
   return (
     <div>
-      <div className="mb-2 text-gray-600">
+      <div className="mb-4 text-gray-600">
         Question {currentQuestionNumber} / {totalQuestions}
       </div>
-      <h2 className="text-lg font-semibold">{data.questionText}</h2>
+      <h2 className="text-lg">{data.questionText}</h2>
       {(data.questionType === 'MCQ' || data.questionType === 'SA') && data.options ? (
-        <div className="mt-4">
+        <div className="mt-5">
           {Object.entries(data.options).map(([key, value]) => (
             <button
               key={key}
@@ -89,8 +109,8 @@ function Question({ data, onNext, onIncorrect, onQuit, currentQuestionNumber, to
       )}
       <div className="mt-6 flex justify-between items-center">
         <button
-          className="p-2 bg-gray-400 text-white rounded w-20"
-          onClick={onQuit}
+          className="p-2 bg-gray-300 text-gray-800 rounded w-20"
+          onClick={handleQuitClick}
         >
           Quit
         </button>
@@ -120,6 +140,31 @@ function Question({ data, onNext, onIncorrect, onQuit, currentQuestionNumber, to
             </div>
           )}
           <p className="mt-2">{data.explanation}</p>
+        </div>
+      )}
+      {showQuitModal && (
+        <div 
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center"
+          onClick={handleOutsideClick}
+        >
+          <div className="bg-white p-5 rounded-lg shadow-xl relative">
+            <h2 className="text-xl font-semibold mb-4">Confirm Quit</h2>
+            <p className="mb-6">Do you really want to quit?</p>
+            <div className="flex justify-center space-x-4">
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded w-20"
+                onClick={handleCancelQuit}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded w-20"
+                onClick={handleConfirmQuit}
+              >
+                Quit
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
