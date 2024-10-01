@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 
 function SettingsPanel({ darkMode, toggleDarkMode }) {
   return (
-    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+    <div className="absolute right-0 mt-3 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200 shadow-md">
       <Link to="/admin" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin</Link>
+      <hr className="my-1 border-gray-200" />
       <div className="px-4 py-2 flex items-center justify-between">
         <span className="text-sm text-gray-700">Dark Mode</span>
         <button
