@@ -18,9 +18,9 @@ function Home() {
       <div className="grid grid-cols-1 gap-4">
         {subjects.map((subject) => (
           <button
-            key={subject._id}
+            key={subject.id}
             className="p-4 bg-blue-500 text-white rounded"
-            onClick={() => navigate(`/quiz/${subject._id}`)}
+            onClick={() => navigate(`/quiz/${subject.id}`)}
           >
             {subject.name}
           </button>
