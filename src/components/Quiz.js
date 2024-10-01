@@ -54,8 +54,14 @@ function Quiz() {
         <div>No questions available for this chapter.</div>
       ) : currentQuestionIndex >= questions.length ? (
         <div>
-          <h1 className="text-xl font-bold">Quiz Completed!</h1>
+          <h1 className="text-xl font-bold mb-4">Quiz Completed!</h1>
           <p>You have completed the quiz.</p>
+          <button
+            className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+            onClick={handleQuit}
+          >
+            Finish
+          </button>
         </div>
       ) : (
         <Question
