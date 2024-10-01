@@ -87,23 +87,23 @@ function Question({ data, onNext, onIncorrect, onQuit, currentQuestionNumber, to
       ) : (
         <div>Unsupported question type</div>
       )}
-      <div className="mt-4 flex justify-between items-center">
+      <div className="mt-6 flex justify-between items-center">
         <button
-          className="p-2 bg-gray-400 text-white rounded"
+          className="p-2 bg-gray-400 text-white rounded w-20"
           onClick={onQuit}
         >
           Quit
         </button>
         {!isAnswered ? (
           <button
-            className="p-2 bg-blue-500 text-white rounded"
+            className="p-2 bg-blue-500 text-white rounded w-20"
             onClick={handleSkip}
           >
             Skip
           </button>
         ) : (
           <button
-            className="p-2 bg-blue-500 text-white rounded"
+            className="p-2 bg-blue-500 text-white rounded w-20"
             onClick={handleNext}
           >
             Next
