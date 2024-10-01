@@ -82,8 +82,14 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
           {Object.entries(data.options).map(([key, value]) => (
             <button
               key={key}
-              className={`block w-full text-left p-2 border mb-2 ${
-                selectedOption === key ? 'bg-blue-200' : ''
+              className={`block w-full text-left p-2 border border-gray-300 mb-2 ${
+                selectedOption === key
+                  ? isAnswered
+                    ? isCorrect
+                      ? 'bg-blue-200'
+                      : 'bg-red-200'
+                    : 'bg-blue-200'
+                  : ''
               }`}
               onClick={() => {
                 if (!isAnswered) {
@@ -178,7 +184,7 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
                 Cancel
               </button>
               <button
-                className="px-4 py-2 bg-red-500 text-white rounded w-20"
+                className="px-4 py-2 bg-red-400 text-white rounded w-20"
                 onClick={handleConfirmQuit}
               >
                 Quit
