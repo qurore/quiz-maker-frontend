@@ -87,20 +87,29 @@ function Question({ data, onNext, onIncorrect, onQuit, currentQuestionNumber, to
       ) : (
         <div>Unsupported question type</div>
       )}
-      <button
-        className="left-align mt-4 p-2 bg-gray-400 text-white rounded"
-        onClick={onQuit}
-      >
-        Quit
-      </button>
-      {!isAnswered && (
+      <div className="mt-4 flex justify-between items-center">
         <button
-          className="mt-4 p-2 bg-blue-500 text-white rounded"
-          onClick={handleSkip}
+          className="p-2 bg-gray-400 text-white rounded"
+          onClick={onQuit}
         >
-          Skip
+          Quit
         </button>
-      )}
+        {!isAnswered ? (
+          <button
+            className="p-2 bg-blue-500 text-white rounded"
+            onClick={handleSkip}
+          >
+            Skip
+          </button>
+        ) : (
+          <button
+            className="p-2 bg-blue-500 text-white rounded"
+            onClick={handleNext}
+          >
+            Next
+          </button>
+        )}
+      </div>
       {isAnswered && (
         <div className="mt-4">
           {isCorrect ? (
@@ -111,12 +120,6 @@ function Question({ data, onNext, onIncorrect, onQuit, currentQuestionNumber, to
             </div>
           )}
           <p className="mt-2">{data.explanation}</p>
-          <button
-            className="mt-4 p-2 bg-blue-500 text-white rounded"
-            onClick={handleNext}
-          >
-            Next
-          </button>
         </div>
       )}
     </div>
