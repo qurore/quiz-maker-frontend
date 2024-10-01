@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Question({ data, onNext, onIncorrect, currentQuestionNumber, totalQuestions }) {
+function Question({ data, onNext, onIncorrect, onQuit, currentQuestionNumber, totalQuestions }) {
   const [selectedOption, setSelectedOption] = useState('');
   const [userAnswer, setUserAnswer] = useState('');
   const [isAnswered, setIsAnswered] = useState(false);
@@ -87,6 +87,12 @@ function Question({ data, onNext, onIncorrect, currentQuestionNumber, totalQuest
       ) : (
         <div>Unsupported question type</div>
       )}
+      <button
+        className="left-align mt-4 p-2 bg-gray-400 text-white rounded"
+        onClick={onQuit}
+      >
+        Quit
+      </button>
       {!isAnswered && (
         <button
           className="mt-4 p-2 bg-blue-500 text-white rounded"

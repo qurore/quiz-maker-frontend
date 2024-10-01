@@ -61,17 +61,12 @@ function Quiz() {
         <Question
           data={questions[currentQuestionIndex]}
           onNext={handleNext}
+          onQuit={handleQuit}
           onIncorrect={handleIncorrect}
           currentQuestionNumber={currentQuestionIndex + 1}
           totalQuestions={questions.length}
         />
       )}
-      <button
-        className="mt-4 p-2 bg-gray-400 text-white rounded"
-        onClick={handleQuit}
-      >
-        Quit
-      </button>
     </div>
   );
 }
