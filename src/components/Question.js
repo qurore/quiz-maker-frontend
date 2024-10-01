@@ -82,7 +82,9 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
           {Object.entries(data.options).map(([key, value]) => (
             <button
               key={key}
-              className={`block w-full text-left p-2 border border-gray-300 mb-2 ${
+              className={`block w-full text-left p-2 border border-gray-200 mb-2 transition-colors duration-300 ease-in-out ${
+                !isAnswered ? 'hover:bg-gray-200' : ''
+              } ${
                 selectedOption === key
                   ? isAnswered
                     ? isCorrect
