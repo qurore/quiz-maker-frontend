@@ -38,13 +38,15 @@ function Quiz() {
     setCorrectCount(correctCount + 1);
   };
 
-  const handleIncorrect = (question) => {
-    const updatedIncorrect = [...incorrectQuestions, question];
-    setIncorrectQuestions(updatedIncorrect);
-    localStorage.setItem(
-      `incorrect_${subjectId}_${chapter}`,
-      JSON.stringify(updatedIncorrect)
-    );
+  const handleIncorrect = async (question) => {
+    try {
+      await axios.post('http://localhost:5001/api/incorrects', {
+        subjectId,
+        questionId: question.questionId
+      });
+    } catch (error) {
+      console.error("Error adding incorrect question:", error);
+    }
   };
 
   const handleQuit = () => {
