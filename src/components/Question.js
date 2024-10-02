@@ -7,6 +7,7 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [pendingIncorrect, setPendingIncorrect] = useState(false);
+  const [markedForReview, setMarkedForReview] = useState(false);
 
   const checkAnswer = (selectedAnswer) => {
     let correct = false;
@@ -61,6 +62,12 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
     }
   };
 
+  const handleMarkAsReview = () => {
+    setMarkedForReview(true);
+    onIncorrect(data);
+    resetQuestion();
+  };
+
   const handleMarkAsCorrect = () => {
     setIsCorrect(true);
     setPendingIncorrect(false);
@@ -74,6 +81,7 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
     setIsAnswered(false);
     setIsCorrect(false);
     setPendingIncorrect(false);
+    setMarkedForReview(false);
     onNext();
   };
 
@@ -141,12 +149,28 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
           Quit
         </button>
         <div>
+          {!isAnswered && (
+            <button
+              className="p-2 bg-blue-500 text-white rounded w-40 mr-2"
+              onClick={handleMarkAsReview}
+            >
+              Mark for Review
+            </button>
+          )}
           {isAnswered && !isCorrect && (
             <button
               className="p-2 bg-blue-200 text-black rounded w-40 mr-2"
               onClick={handleMarkAsCorrect}
             >
               Mark as Correct
+            </button>
+          )}
+          {isAnswered && isCorrect && (
+            <button
+              className="p-2 bg-blue-500 text-white rounded w-40 mr-2"
+              onClick={handleMarkAsReview}
+            >
+              Mark for Review
             </button>
           )}
           {!isAnswered ? (
