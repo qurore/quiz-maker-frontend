@@ -61,7 +61,7 @@ function SubjectChapters() {
         ))}
       </div>
       <button
-        className={`p-2 rounded w-200 mx-auto block transition-colors duration-300 ${
+        className={`p-2 rounded w-1/6 mx-auto block transition-colors duration-300 ${
           selectedChapters.length > 0
             ? 'bg-green-500 text-white hover:bg-green-600'
             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -69,7 +69,7 @@ function SubjectChapters() {
         onClick={handleStartQuiz}
         disabled={selectedChapters.length === 0}
       >
-        Start Quiz
+        Start
       </button>
     </div>
   );
