@@ -111,6 +111,7 @@ function Quiz() {
           onCorrect={handleCorrect}
           currentQuestionNumber={currentQuestionIndex + 1}
           totalQuestions={questions.length}
+          isReviewQuiz={isReviewQuiz}
         />
       )}
     </div>

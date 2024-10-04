@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestionNumber, totalQuestions }) {
+const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestionNumber, totalQuestions, isReviewQuiz }) => {
   const [selectedOption, setSelectedOption] = useState('');
   const [showQuitModal, setShowQuitModal] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
@@ -105,8 +105,8 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
 
   return (
     <div>
-      <div className="mb-4 text-gray-600">
-        Question {currentQuestionNumber} / {totalQuestions}
+      <div className="mb-4 text-gray-500 font-bold">
+          {isReviewQuiz ? `Review question ${currentQuestionNumber}` : `Question ${currentQuestionNumber}`} / {totalQuestions}
       </div>
       <h2 className="text-lg whitespace-pre-wrap">{data.questionText}</h2>
       {(data.questionType === 'MCQ' || data.questionType === 'SA') && data.options ? (
