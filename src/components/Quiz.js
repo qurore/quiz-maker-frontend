@@ -1,34 +1,39 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Question from './Question';
 
 function Quiz() {
-  const { subjectId, chapter } = useParams();
+  const { subjectId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const selectedChapters = location.state?.selectedChapters || [];
   const [questions, setQuestions] = useState([]);
   const [correctCount, setCorrectCount] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [incorrectQuestions, setIncorrectQuestions] = useState(
-    JSON.parse(localStorage.getItem(`incorrect_${subjectId}_${chapter}`)) || []
-  );
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get('http://localhost:5001/api/questions', {
-        params: { subjectId, chapter },
-      })
-      .then((response) => {
-        setQuestions(response.data);
+    const fetchQuestions = async () => {
+      try {
+        const questionsPromises = selectedChapters.map(chapter => 
+          axios.get('http://localhost:5001/api/questions', {
+            params: { subjectId, chapter },
+          })
+        );
+        const responses = await Promise.all(questionsPromises);
+        const allQuestions = responses.flatMap(response => response.data);
+        setQuestions(allQuestions);
         setIsLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching questions:", error);
         setIsLoading(false);
-      });
-  }, [subjectId, chapter]);
+      }
+    };
+
+    fetchQuestions();
+  }, [subjectId, selectedChapters]);
 
   const handleNext = () => {
     setCurrentQuestionIndex(currentQuestionIndex + 1);

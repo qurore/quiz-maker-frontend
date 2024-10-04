@@ -13,7 +13,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/quiz/:subjectId" element={<SubjectChapters />} />
-            <Route path="/quiz/:subjectId/:chapter" element={<Quiz />} />
+            <Route path="/quiz/:subjectId/custom" element={<Quiz />} />
           </Routes>
         </main>
       </div>
