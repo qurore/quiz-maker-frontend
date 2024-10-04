@@ -49,8 +49,10 @@ function SubjectChapters() {
         {chapters.map((chapter) => (
           <button
             key={chapter}
-            className={`p-4 text-white rounded ${
-              selectedChapters.includes(chapter) ? 'bg-blue-700' : 'bg-blue-500'
+            className={`p-4 rounded transition-colors duration-300 ${
+              selectedChapters.includes(chapter)
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-blue-200'
             }`}
             onClick={() => toggleChapterSelection(chapter)}
           >
@@ -59,7 +61,11 @@ function SubjectChapters() {
         ))}
       </div>
       <button
-        className="p-4 bg-green-500 text-white rounded w-full"
+        className={`p-2 rounded w-200 mx-auto block transition-colors duration-300 ${
+          selectedChapters.length > 0
+            ? 'bg-green-500 text-white hover:bg-green-600'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+        }`}
         onClick={handleStartQuiz}
         disabled={selectedChapters.length === 0}
       >
