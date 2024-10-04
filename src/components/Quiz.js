@@ -42,7 +42,8 @@ function Quiz() {
     try {
       await axios.post('http://localhost:5001/api/incorrects', {
         subjectId,
-        questionId: question.questionId
+        questionId: question.questionId,
+        chapter: question.chapter
       });
     } catch (error) {
       console.error("Error adding incorrect question:", error);

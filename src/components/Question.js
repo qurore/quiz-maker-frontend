@@ -89,12 +89,14 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
     return <div>Loading question...</div>;
   }
 
+  console.log("data", data);
+
   return (
     <div>
       <div className="mb-4 text-gray-600">
         Question {currentQuestionNumber} / {totalQuestions}
       </div>
-      <h2 className="text-lg">{data.questionText}</h2>
+      <h2 className="text-lg whitespace-pre-wrap">{data.questionText}</h2>
       {(data.questionType === 'MCQ' || data.questionType === 'SA') && data.options ? (
         <div className="mt-5">
           {Object.entries(data.options).map(([key, value]) => (
