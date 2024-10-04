@@ -8,39 +8,53 @@ function Quiz() {
   const navigate = useNavigate();
   const location = useLocation();
   const selectedChapters = location.state?.selectedChapters || [];
+  const isReviewQuiz = location.pathname.includes('/review');
   const [questions, setQuestions] = useState([]);
   const [correctCount, setCorrectCount] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
     const fetchQuestions = async () => {
+      setIsLoading(true);
       try {
-        const questionsPromises = selectedChapters.map(chapter => 
-          axios.get('http://localhost:5001/api/questions', {
-            params: { subjectId, chapter },
-          })
-        );
-        const responses = await Promise.all(questionsPromises);
-        const allQuestions = responses.flatMap(response => response.data);
-        setQuestions(allQuestions);
-        setIsLoading(false);
+        let endpoint;
+        if (isReviewQuiz) {
+          endpoint = `http://localhost:5001/api/incorrects?subjectId=${subjectId}&chapters=${selectedChapters.join(',')}`;
+        } else {
+          endpoint = `http://localhost:5001/api/questions?subjectId=${subjectId}&chapter=${selectedChapters.join(',')}`;
+        }
+        const response = await axios.get(endpoint);
+        setQuestions(response.data);
       } catch (error) {
-        console.error("Error fetching questions:", error);
+        console.error('Error fetching questions:', error);
+      } finally {
         setIsLoading(false);
       }
     };
-
+  
     fetchQuestions();
-  }, [subjectId, selectedChapters]);
+  }, [subjectId, selectedChapters, isReviewQuiz]);
 
   const handleNext = () => {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
   };
 
-  const handleCorrect = () => {
+  const handleCorrect = async (question) => {
     setCorrectCount(correctCount + 1);
+    if (isReviewQuiz) {
+      try {
+        await axios.delete('http://localhost:5001/api/incorrects', {
+          data: {
+            subjectId: question.subjectId,
+            questionId: question.questionId,
+            chapter: question.chapter
+          }
+        });
+      } catch (error) {
+        console.error("Error removing question from incorrects:", error);
+      }
+    }
   };
 
   const handleIncorrect = async (question) => {
@@ -62,12 +76,22 @@ function Quiz() {
   return (
     <div className="container mx-auto p-4">
       {isLoading ? (
-        <div>Loading questions...</div>
+        <div className="text-center">
+          <p className="text-xl">Loading questions...</p>
+        </div>
       ) : questions.length === 0 ? (
-        <div>No questions available for this chapter.</div>
+        <div className="text-center">
+          <p className="text-xl">No questions available for the selected chapters.</p>
+          <button
+            className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+            onClick={handleQuit}
+          >
+            Go Back
+          </button>
+        </div>
       ) : currentQuestionIndex >= questions.length ? (
-        <div>
-          <h1 className="text-xl font-bold mb-4">Quiz Completed!</h1>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Quiz Completed!</h1>
           <p className="mt-2 text-lg">
             Your score: <strong>{correctCount} / {questions.length}</strong>
           </p>

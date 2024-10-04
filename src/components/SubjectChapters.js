@@ -42,6 +42,14 @@ function SubjectChapters() {
     }
   };
 
+  const handleReviewQuiz = () => {
+    if (selectedChapters.length > 0) {
+      navigate(`/quiz/${subjectId}/review`, { state: { selectedChapters } });
+    } else {
+      alert('Please select at least one chapter to start the review quiz.');
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">{subjectName} Quizzes</h1>
@@ -59,6 +67,17 @@ function SubjectChapters() {
             {chapter}
           </button>
         ))}
+        <button
+          className={`p-2 rounded w-1/6 mx-auto block mt-4 transition-colors duration-300 ${
+            selectedChapters.length > 0
+              ? 'bg-yellow-500 text-white hover:bg-yellow-600'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+          onClick={handleReviewQuiz}
+          disabled={selectedChapters.length === 0}
+        >
+          Review
+        </button>
       </div>
       <button
         className={`p-2 rounded w-1/6 mx-auto block transition-colors duration-300 ${

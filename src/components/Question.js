@@ -8,6 +8,7 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
   const [isCorrect, setIsCorrect] = useState(false);
   const [pendingIncorrect, setPendingIncorrect] = useState(false);
   const [markedForReview, setMarkedForReview] = useState(false);
+  const [answered, setAnswered] = useState(false);
 
   const checkAnswer = (selectedAnswer) => {
     let correct = false;
@@ -37,6 +38,17 @@ function Question({ data, onNext, onIncorrect, onCorrect, onQuit, currentQuestio
       onIncorrect(data);
     }
     resetQuestion();
+  };
+
+  const handleAnswer = (selectedAnswer) => {
+    const isCorrect = checkAnswer(selectedAnswer);
+    setAnswered(true);
+    setIsCorrect(isCorrect);
+    if (isCorrect) {
+      onCorrect(data);
+    } else {
+      onIncorrect(data);
+    }
   };
 
   const handleSkip = () => {
