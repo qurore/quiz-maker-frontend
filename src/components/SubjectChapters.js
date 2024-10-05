@@ -8,6 +8,7 @@ function SubjectChapters() {
   const [chapters, setChapters] = useState([]);
   const [subjectName, setSubjectName] = useState('');
   const [selectedChapters, setSelectedChapters] = useState([]);
+  const [shuffleQuestions, setShuffleQuestions] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +37,7 @@ function SubjectChapters() {
 
   const handleStartQuiz = () => {
     if (selectedChapters.length > 0) {
-      navigate(`/quiz/${subjectId}/custom`, { state: { selectedChapters } });
+      navigate(`/quiz/${subjectId}/custom`, { state: { selectedChapters, shuffleQuestions } });
     } else {
       alert('Please select at least one chapter to start the quiz.');
     }
@@ -44,7 +45,7 @@ function SubjectChapters() {
 
   const handleReviewQuiz = () => {
     if (selectedChapters.length > 0) {
-      navigate(`/quiz/${subjectId}/review`, { state: { selectedChapters } });
+      navigate(`/quiz/${subjectId}/review`, { state: { selectedChapters, shuffleQuestions } });
     } else {
       alert('Please select at least one chapter to start the review quiz.');
     }
@@ -67,6 +68,16 @@ function SubjectChapters() {
             {chapter}
           </button>
         ))}
+      </div>
+      <div className="flex items-center justify-center mb-4">
+        <input
+          type="checkbox"
+          id="shuffleQuestions"
+          checked={shuffleQuestions}
+          onChange={(e) => setShuffleQuestions(e.target.checked)}
+          className="mr-2"
+        />
+        <label htmlFor="shuffleQuestions">Shuffle Questions</label>
       </div>
       <div className="flex justify-center space-x-4">
         <button

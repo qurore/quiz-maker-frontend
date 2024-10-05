@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestionNumber, totalQuestions, isReviewQuiz }) => {
   const [selectedOption, setSelectedOption] = useState('');
@@ -97,6 +97,32 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
     onNext();
   };
 
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (data.questionType === 'MCQ') {
+        const key = event.key;
+        const optionIndex = parseInt(key) - 1;
+        if (!isNaN(optionIndex) && optionIndex >= 0 && optionIndex < Object.keys(data.options).length) {
+          if (!isAnswered) {
+            const optionKey = Object.keys(data.options)[optionIndex];
+            setSelectedOption(optionKey);
+            checkAnswer(optionKey);
+          }
+        }
+      }
+
+      if (event.key === 'Enter' && isAnswered) {
+        handleNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [data, isAnswered]);
+
   if (!data) {
     return <div>Loading question...</div>;
   }
@@ -109,7 +135,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
       <h2 className="text-lg whitespace-pre-wrap">{data.questionText}</h2>
       {(data.questionType === 'MCQ' || data.questionType === 'SA') && data.options ? (
         <div className="mt-5">
-          {Object.entries(data.options).map(([key, value]) => (
+          {Object.entries(data.options).map(([key, value], index) => (
             <button
               key={key}
               className={`block w-full text-left p-2 border border-gray-200 mb-2 transition-colors duration-300 ease-in-out ${
@@ -131,7 +157,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
               }}
               disabled={isAnswered}
             >
-              {value}
+              <span className="font-bold mr-2"></span> {value}
             </button>
           ))}
         </div>

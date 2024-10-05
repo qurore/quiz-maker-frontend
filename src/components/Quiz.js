@@ -8,6 +8,7 @@ function Quiz() {
   const navigate = useNavigate();
   const location = useLocation();
   const selectedChapters = location.state?.selectedChapters || [];
+  const shuffleQuestions = location.state?.shuffleQuestions || false;
   const isReviewQuiz = location.pathname.includes('/review');
   const [questions, setQuestions] = useState([]);
   const [correctCount, setCorrectCount] = useState(0);
@@ -25,7 +26,13 @@ function Quiz() {
           endpoint = `http://localhost:5001/api/questions?subjectId=${subjectId}&chapter=${selectedChapters.join(',')}`;
         }
         const response = await axios.get(endpoint);
-        setQuestions(response.data);
+        let fetchedQuestions = response.data;
+        
+        if (shuffleQuestions) {
+          fetchedQuestions = shuffleArray(fetchedQuestions);
+        }
+        
+        setQuestions(fetchedQuestions);
       } catch (error) {
         console.error('Error fetching questions:', error);
       } finally {
@@ -34,7 +41,7 @@ function Quiz() {
     };
   
     fetchQuestions();
-  }, [subjectId, selectedChapters, isReviewQuiz]);
+  }, [subjectId, selectedChapters, isReviewQuiz, shuffleQuestions]);
 
   const handleNext = () => {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -71,6 +78,15 @@ function Quiz() {
 
   const handleQuit = () => {
     navigate(`/quiz/${subjectId}`);
+  };
+
+  const shuffleArray = (array) => {
+    let shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
   };
 
   return (
