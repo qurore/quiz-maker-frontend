@@ -20,7 +20,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
     setIsCorrect(correct);
     setIsAnswered(true);
     if (correct) {
-      onCorrect();
+      onCorrect(data);  // Pass the entire question data
     } else {
       setPendingIncorrect(true);
     }
@@ -100,8 +100,6 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
   if (!data) {
     return <div>Loading question...</div>;
   }
-
-  console.log("data", data);
 
   return (
     <div>

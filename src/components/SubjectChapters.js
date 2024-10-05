@@ -67,8 +67,10 @@ function SubjectChapters() {
             {chapter}
           </button>
         ))}
+      </div>
+      <div className="flex justify-center space-x-4">
         <button
-          className={`p-2 rounded w-1/6 mx-auto block mt-4 transition-colors duration-300 ${
+          className={`p-2 rounded w-1/6 transition-colors duration-300 ${
             selectedChapters.length > 0
               ? 'bg-yellow-500 text-white hover:bg-yellow-600'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -78,18 +80,18 @@ function SubjectChapters() {
         >
           Review
         </button>
+        <button
+          className={`p-2 rounded w-1/6 transition-colors duration-300 ${
+            selectedChapters.length > 0
+              ? 'bg-green-500 text-white hover:bg-green-600'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+          onClick={handleStartQuiz}
+          disabled={selectedChapters.length === 0}
+        >
+          Start
+        </button>
       </div>
-      <button
-        className={`p-2 rounded w-1/6 mx-auto block transition-colors duration-300 ${
-          selectedChapters.length > 0
-            ? 'bg-green-500 text-white hover:bg-green-600'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-        }`}
-        onClick={handleStartQuiz}
-        disabled={selectedChapters.length === 0}
-      >
-        Start
-      </button>
     </div>
   );
 }
