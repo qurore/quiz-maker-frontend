@@ -177,7 +177,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
         <div>
           {!isAnswered && (
             <button
-              className="p-2 bg-blue-500 text-white rounded w-40 mr-2"
+              className="p-2 bg-blue-500 text-white rounded w-40 mr-5"
               onClick={handleMarkAsReview}
             >
               Mark for Review
@@ -185,7 +185,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
           )}
           {isAnswered && !isCorrect && (
             <button
-              className="p-2 bg-blue-200 text-black rounded w-40 mr-2"
+              className="p-2 bg-blue-200 text-black rounded w-40 mr-5"
               onClick={handleMarkAsCorrect}
             >
               Mark as Correct
@@ -193,7 +193,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
           )}
           {isAnswered && isCorrect && (
             <button
-              className="p-2 bg-blue-500 text-white rounded w-40 mr-2"
+              className="p-2 bg-blue-500 text-white rounded w-40 mr-5"
               onClick={handleMarkAsReview}
             >
               Mark for Review
