@@ -8,7 +8,6 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
   const [isCorrect, setIsCorrect] = useState(false);
   const [pendingIncorrect, setPendingIncorrect] = useState(false);
   const [markedForReview, setMarkedForReview] = useState(false);
-  const [answered, setAnswered] = useState(false);
 
   const checkAnswer = (selectedAnswer) => {
     let correct = false;
@@ -38,17 +37,6 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
       onIncorrect(data);
     }
     resetQuestion();
-  };
-
-  const handleAnswer = (selectedAnswer) => {
-    const isCorrect = checkAnswer(selectedAnswer);
-    setAnswered(true);
-    setIsCorrect(isCorrect);
-    if (isCorrect) {
-      onCorrect(data);
-    } else {
-      onIncorrect(data);
-    }
   };
 
   const handleSkip = () => {
@@ -239,7 +227,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
               </div>
             </div>
           )}
-          <p className="mt-2">{data.explanation}</p>
+          <p className="mt-2 whitespace-pre-wrap">{data.explanation}</p>
         </div>
       )}
       {showQuitModal && (
