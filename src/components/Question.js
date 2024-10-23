@@ -8,6 +8,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
   const [isCorrect, setIsCorrect] = useState(false);
   const [pendingIncorrect, setPendingIncorrect] = useState(false);
   const [markedForReview, setMarkedForReview] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const checkAnswer = (selectedAnswer) => {
     let correct = false;
@@ -32,11 +33,20 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
     return data.answer.join(', ');
   };
 
-  const handleNext = () => {
-    if (pendingIncorrect) {
-      onIncorrect(data);
+  const handleNext = async () => {
+    if (isProcessing) return;
+    
+    setIsProcessing(true);
+    try {
+      if (pendingIncorrect) {
+        await onIncorrect(data);
+      }
+      resetQuestion();
+    } finally {
+      // 少なくとも500ミリ秒は待機
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setIsProcessing(false);
     }
-    resetQuestion();
   };
 
   const handleSkip = () => {
@@ -208,8 +218,9 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
             </button>
           ) : (
             <button
-              className="p-2 bg-blue-500 text-white rounded w-20"
+              className={`p-2 bg-blue-500 text-white rounded w-20 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
               onClick={handleNext}
+              disabled={isProcessing}
             >
               Next
             </button>
