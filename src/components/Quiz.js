@@ -14,6 +14,7 @@ function Quiz() {
   const [correctCount, setCorrectCount] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalAnsweredCount, setTotalAnsweredCount] = useState(0);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -54,6 +55,7 @@ function Quiz() {
 
   const handleCorrect = async (question) => {
     setCorrectCount(correctCount + 1);
+    setTotalAnsweredCount(totalAnsweredCount + 1);
     if (isReviewQuiz) {
       try {
         await axios.delete('http://localhost:5001/api/incorrects', {
@@ -70,6 +72,7 @@ function Quiz() {
   };
 
   const handleIncorrect = async (question) => {
+    setTotalAnsweredCount(totalAnsweredCount + 1);
     try {
       await axios.post('http://localhost:5001/api/incorrects', {
         subjectId,
@@ -134,6 +137,7 @@ function Quiz() {
           totalQuestions={questions.length}
           isReviewQuiz={isReviewQuiz}
           correctCount={correctCount}
+          totalAnsweredCount={totalAnsweredCount}
         />
       )}
     </div>

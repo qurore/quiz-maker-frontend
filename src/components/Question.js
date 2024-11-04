@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 
-const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestionNumber, totalQuestions, isReviewQuiz, correctCount }) => {
+const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestionNumber, totalQuestions, isReviewQuiz, correctCount, totalAnsweredCount }) => {
   const [selectedOption, setSelectedOption] = useState('');
   const [showQuitModal, setShowQuitModal] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
@@ -148,7 +148,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
           {markedForReview && <span className="ml-2 text-yellow-600">(Marked for Review)</span>}
         </div>
         <div>
-          Answered: {correctCount} questions
+          Answered: {totalAnsweredCount} ({correctCount} correct)
         </div>
       </div>
       <h2 className="text-lg whitespace-pre-wrap">{data.questionText}</h2>
