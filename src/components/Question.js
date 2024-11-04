@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { debounce } from 'lodash';
 
-const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestionNumber, totalQuestions, isReviewQuiz }) => {
+const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestionNumber, totalQuestions, isReviewQuiz, correctCount }) => {
   const [selectedOption, setSelectedOption] = useState('');
   const [showQuitModal, setShowQuitModal] = useState(false);
   const [userAnswer, setUserAnswer] = useState('');
@@ -33,17 +34,27 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
     return data.answer.join(', ');
   };
 
+  const debouncedNext = useCallback(
+    debounce(() => {
+      onNext();
+    }, 300),
+    [onNext]
+  );
+
   const handleNext = async () => {
     if (isProcessing) return;
     
     setIsProcessing(true);
     try {
       if (pendingIncorrect) {
-        await onIncorrect(data);
+        await onIncorrect(data).catch(error => {
+          console.error('Error handling incorrect answer:', error);
+        });
       }
       resetQuestion();
+    } catch (error) {
+      console.error('Error in handleNext:', error);
     } finally {
-      // 少なくとも500ミリ秒は待機
       await new Promise(resolve => setTimeout(resolve, 500));
       setIsProcessing(false);
     }
@@ -74,7 +85,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
 
   const handleMarkAsReview = () => {
     setMarkedForReview(true);
-    onIncorrect(data);
+    onIncorrect({ ...data, markedForReview: true });
     resetQuestion();
   };
 
@@ -86,17 +97,21 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
   };
 
   const resetQuestion = () => {
-    setSelectedOption('');
-    setUserAnswer('');
-    setIsAnswered(false);
-    setIsCorrect(false);
-    setPendingIncorrect(false);
-    setMarkedForReview(false);
-    onNext();
+    Promise.resolve().then(() => {
+      setSelectedOption('');
+      setUserAnswer('');
+      setIsAnswered(false);
+      setIsCorrect(false);
+      setPendingIncorrect(false);
+      setMarkedForReview(false);
+      onNext();
+    });
   };
 
   useEffect(() => {
     const handleKeyPress = (event) => {
+      if (isProcessing) return;  // 処理中は無視
+
       if (data.questionType === 'MCQ') {
         const key = event.key;
         const optionIndex = parseInt(key) - 1;
@@ -119,7 +134,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
-  }, [data, isAnswered]);
+  }, [data, isAnswered, isProcessing, handleNext]); // 依存配列を更新
 
   if (!data) {
     return <div>Loading question...</div>;
@@ -127,8 +142,14 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
 
   return (
     <div>
-      <div className="mb-4 text-gray-500 font-bold">
+      <div className="mb-4 text-gray-500 font-bold flex justify-between items-center">
+        <div>
           {isReviewQuiz ? `Review question ${currentQuestionNumber}` : `Question ${currentQuestionNumber}`} / {totalQuestions}
+          {markedForReview && <span className="ml-2 text-yellow-600">(Marked for Review)</span>}
+        </div>
+        <div>
+          Answered: {correctCount} questions
+        </div>
       </div>
       <h2 className="text-lg whitespace-pre-wrap">{data.questionText}</h2>
       {(data.questionType === 'MCQ' || data.questionType === 'SA') && data.options ? (

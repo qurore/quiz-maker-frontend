@@ -44,7 +44,12 @@ function Quiz() {
   }, [subjectId, selectedChapters, isReviewQuiz, shuffleQuestions]);
 
   const handleNext = () => {
-    setCurrentQuestionIndex(currentQuestionIndex + 1);
+    setCurrentQuestionIndex(prevIndex => {
+      if (prevIndex < questions.length - 1) {
+        return prevIndex + 1;
+      }
+      return prevIndex;
+    });
   };
 
   const handleCorrect = async (question) => {
@@ -128,6 +133,7 @@ function Quiz() {
           currentQuestionNumber={currentQuestionIndex + 1}
           totalQuestions={questions.length}
           isReviewQuiz={isReviewQuiz}
+          correctCount={correctCount}
         />
       )}
     </div>
