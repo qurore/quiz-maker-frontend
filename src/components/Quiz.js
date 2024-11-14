@@ -45,12 +45,11 @@ function Quiz() {
   }, [subjectId, selectedChapters, isReviewQuiz, shuffleQuestions]);
 
   const handleNext = () => {
-    setCurrentQuestionIndex(prevIndex => {
-      if (prevIndex < questions.length - 1) {
-        return prevIndex + 1;
-      }
-      return prevIndex;
-    });
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(prevIndex => prevIndex + 1);
+    } else {
+      setCurrentQuestionIndex(questions.length);
+    }
   };
 
   const handleCorrect = async (question) => {
@@ -117,7 +116,7 @@ function Quiz() {
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Quiz Completed!</h1>
           <p className="mt-2 text-lg">
-            Your score: <strong>{correctCount} / {questions.length}</strong>
+            Your score: <strong>{correctCount} / {totalAnsweredCount}</strong>
           </p>
           <button
             className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
