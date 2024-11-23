@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
-import SubjectChapters from './components/SubjectChapters';
-import Quiz from './components/Quiz';
-import Navbar from './components/Navbar';
-import UserGuide from './pages/UserGuide';
-import Admin from './pages/Admin';
+import Home from '@components/Home';
+import SubjectChapters from '@components/SubjectChapters';
+import Quiz from '@components/Quiz';
+import Navbar from '@components/Navbar';
+import UserGuide from '@pages/UserGuide';
+import Admin from '@pages/Admin';
+
 function App() {
   return (
     <Router>
