@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AdminLogin from '@components/Admin/AdminLogin';
-import AdminDashboard from '@components/Admin/AdminDashboard';
+import AdminLogin from 'components/Admin/AdminLogin';
+import AdminDashboard from 'components/Admin/AdminDashboard';
 
 function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
