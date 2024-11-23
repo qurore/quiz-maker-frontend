@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { debounce } from 'lodash';
 
 const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestionNumber, totalQuestions, isReviewQuiz, correctCount, totalAnsweredCount }) => {
   const [selectedOption, setSelectedOption] = useState('');
@@ -11,7 +10,19 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
   const [markedForReview, setMarkedForReview] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const checkAnswer = (selectedAnswer) => {
+  const resetQuestion = useCallback(() => {
+    Promise.resolve().then(() => {
+      setSelectedOption('');
+      setUserAnswer('');
+      setIsAnswered(false);
+      setIsCorrect(false);
+      setPendingIncorrect(false);
+      setMarkedForReview(false);
+      onNext();
+    });
+  }, [onNext]);
+
+  const checkAnswer = useCallback((selectedAnswer) => {
     let correct = false;
     if (data.questionType === 'MCQ' || data.questionType === 'SA') {
       correct = data.answer.includes(parseInt(selectedAnswer));
@@ -21,11 +32,11 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
     setIsCorrect(correct);
     setIsAnswered(true);
     if (correct) {
-      onCorrect(data);  // Pass the entire question data
+      onCorrect(data);
     } else {
       setPendingIncorrect(true);
     }
-  };
+  }, [data, onCorrect]);
 
   const getCorrectAnswerText = () => {
     if (data.questionType === 'MCQ' || data.questionType === 'SA') {
@@ -34,14 +45,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
     return data.answer.join(', ');
   };
 
-  const debouncedNext = useCallback(
-    debounce(() => {
-      onNext();
-    }, 300),
-    [onNext]
-  );
-
-  const handleNext = async () => {
+  const handleNext = useCallback(async () => {
     if (isProcessing) return;
     
     setIsProcessing(true);
@@ -58,7 +62,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
       await new Promise(resolve => setTimeout(resolve, 500));
       setIsProcessing(false);
     }
-  };
+  }, [isProcessing, pendingIncorrect, data, onIncorrect, resetQuestion]);
 
   const handleSkip = () => {
     onNext();
@@ -96,21 +100,9 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
     resetQuestion();
   };
 
-  const resetQuestion = () => {
-    Promise.resolve().then(() => {
-      setSelectedOption('');
-      setUserAnswer('');
-      setIsAnswered(false);
-      setIsCorrect(false);
-      setPendingIncorrect(false);
-      setMarkedForReview(false);
-      onNext();
-    });
-  };
-
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (isProcessing) return;  // 処理中は無視
+      if (isProcessing) return;
 
       if (data.questionType === 'MCQ') {
         const key = event.key;
@@ -134,7 +126,7 @@ const Question = ({ data, onNext, onQuit, onIncorrect, onCorrect, currentQuestio
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
-  }, [data, isAnswered, isProcessing, handleNext]); // 依存配列を更新
+  }, [data, isAnswered, isProcessing, handleNext, checkAnswer]);
 
   if (!data) {
     return <div>Loading question...</div>;

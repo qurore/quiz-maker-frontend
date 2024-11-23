@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Question from './Question';
@@ -7,8 +7,14 @@ function Quiz() {
   const { subjectId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const selectedChapters = location.state?.selectedChapters || [];
-  const shuffleQuestions = location.state?.shuffleQuestions || false;
+  const selectedChapters = useMemo(() => 
+    location.state?.selectedChapters || [], 
+    [location.state?.selectedChapters]
+  );
+  const shuffleQuestions = useMemo(() =>
+    location.state?.shuffleQuestions || false,
+    [location.state?.shuffleQuestions]
+  );
   const isReviewQuiz = location.pathname.includes('/review');
   const [questions, setQuestions] = useState([]);
   const [correctCount, setCorrectCount] = useState(0);
