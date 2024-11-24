@@ -36,10 +36,9 @@ function Navbar() {
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link to="/" className="text-xl font-bold">Quiz Maker</Link>
         <div className="flex items-center space-x-4">
-          <Link to="/review" className="text-gray-600 hover:text-blue-600 transition-colors focus:outline-none flex items-center">
+          <Link to="/review" className="text-gray-600 hover:text-blue-600 transition-colors focus:outline-none flex items-center mr-4">
             <RiFileListLine className="h-6 w-6" />
             <span className="ml-1">Review</span>
-            <IoMdArrowDropdown className="h-4 w-4 ml-1 mr-2" />
           </Link>
           <div className="relative" ref={settingsRef}>
             <button 
