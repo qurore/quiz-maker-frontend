@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import axios from 'axios';
 
 function Search() {
   const [searchParams] = useSearchParams();
@@ -18,18 +19,19 @@ function Search() {
       setNotFound(false);
       
       try {
-        const response = await fetch(`http://localhost:5001/api/wikipedia/${word}`);
-        const data = await response.json();
+        const response = await axios.get(`http://localhost:5001/api/wikipedia/${word}`);
         
         if (response.status === 404) {
           setNotFound(true);
-        } else if (!response.ok) {
-          throw new Error(data.error || 'Failed to fetch definition');
         } else {
-          setDefinition(data);
+          setDefinition(response.data);
         }
       } catch (err) {
-        setError(err.message || 'Failed to fetch definition');
+        if (err.response?.status === 404) {
+          setNotFound(true);
+        } else {
+          setError(err.message || 'Failed to fetch definition');
+        }
       } finally {
         setLoading(false);
       }
