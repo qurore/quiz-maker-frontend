@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-function CsvUpload() {
+function CsvUpload({ onUploadSuccess }) {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
@@ -29,6 +29,7 @@ function CsvUpload() {
       });
       setMessage('File uploaded successfully!');
       setFile(null);
+      onUploadSuccess();
     } catch (error) {
       setMessage('Error uploading file: ' + error.message);
     } finally {
