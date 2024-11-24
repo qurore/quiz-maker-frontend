@@ -51,24 +51,46 @@ function SubjectChapters() {
     }
   };
 
+  const totalSelectedQuestions = chapters
+    .filter(chapter => selectedChapters.includes(chapter.name))
+    .reduce((sum, chapter) => sum + chapter.count, 0);
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">{subjectName} Quizzes</h1>
       <div className="grid grid-cols-1 gap-4 mb-6">
         {chapters.map((chapter) => (
           <button
-            key={chapter}
+            key={chapter.name}
             className={`p-4 rounded transition-colors duration-300 ${
-              selectedChapters.includes(chapter)
+              selectedChapters.includes(chapter.name)
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-blue-200'
             }`}
-            onClick={() => toggleChapterSelection(chapter)}
+            onClick={() => toggleChapterSelection(chapter.name)}
           >
-            {chapter}
+            <div className="flex justify-between items-center">
+              <span>{chapter.name}</span>
+              <span className={`px-3 py-1 rounded-full text-sm ${
+                selectedChapters.includes(chapter.name)
+                  ? 'bg-blue-600'
+                  : 'bg-gray-300'
+              }`}>
+                {chapter.count}
+              </span>
+            </div>
           </button>
         ))}
       </div>
+
+      {selectedChapters.length > 0 && (
+        <div className="text-center mb-4">
+          <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full">
+            Total Questions: {totalSelectedQuestions}
+          </span>
+        </div>
+      )}
+
       <div className="flex items-center justify-center mb-4">
         <input
           type="checkbox"

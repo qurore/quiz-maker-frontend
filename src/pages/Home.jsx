@@ -28,10 +28,15 @@ function Home() {
           subjects.map((subject) => (
             <button
               key={subject.id}
-              className="p-4 bg-blue-500 text-white rounded"
+              className="p-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
               onClick={() => navigate(`/quiz/${subject.id}`)}
             >
-              {subject.name}
+              <div className="flex justify-between items-center">
+                <span>{subject.name}</span>
+                <span className="bg-blue-600 px-3 py-1 rounded-full text-sm">
+                  {subject.questionCount} questions
+                </span>
+              </div>
             </button>
           ))
         )}
