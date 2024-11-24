@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from 'components/Home';
+import Home from 'pages/Home';
 import SubjectChapters from 'components/SubjectChapters';
 import Quiz from 'components/Quiz';
 import Navbar from 'components/Navbar';
