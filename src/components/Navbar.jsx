@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { FiSettings } from 'react-icons/fi';
-import { IoMdArrowDropdown } from 'react-icons/io';
 import { RiFileListLine } from 'react-icons/ri';
 import { useState, useRef, useEffect } from 'react';
 import SettingsPanel from './SettingsPanel';
