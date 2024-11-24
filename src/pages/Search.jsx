@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { fetchWordDefinition } from 'services/DictionaryService';
 
 function Search() {
   const [searchParams] = useSearchParams();
@@ -15,14 +14,14 @@ function Search() {
       
       setLoading(true);
       try {
-        const result = await fetchWordDefinition(word);
-        if (result.success) {
-          setDefinition(result.data);
-        } else {
-          setError(result.error);
+        const response = await fetch(`http://localhost:5001/api/wikipedia/${word}`);
+        if (!response.ok) {
+          throw new Error(response.statusText);
         }
+        const data = await response.json();
+        setDefinition(data);
       } catch (err) {
-        setError('Failed to fetch definition');
+        setError(err.message || 'Failed to fetch definition');
       } finally {
         setLoading(false);
       }
@@ -34,7 +33,7 @@ function Search() {
   if (!word) {
     return (
       <div className="container mx-auto p-4">
-        <div className="text-center text-gray-500">No word specified</div>
+        <div className="text-center text-gray-500">No term specified</div>
       </div>
     );
   }
@@ -53,25 +52,20 @@ function Search() {
 
       {definition && (
         <div className="bg-white p-6 rounded-lg shadow-sm border">
-          {definition.meanings.map((meaning, index) => (
-            <div key={index} className="mb-6 last:mb-0">
-              <h2 className="text-xl font-semibold text-gray-700 mb-2">
-                {meaning.partOfSpeech}
-              </h2>
-              <ol className="list-decimal list-inside space-y-3">
-                {meaning.definitions.map((def, idx) => (
-                  <li key={idx} className="text-gray-600">
-                    <span>{def.definition}</span>
-                    {def.example && (
-                      <p className="ml-6 mt-1 text-gray-500 italic">
-                        Example: "{def.example}"
-                      </p>
-                    )}
-                  </li>
-                ))}
-              </ol>
-            </div>
-          ))}
+          <h2 className="text-2xl font-semibold mb-4">{definition.title}</h2>
+          <div className="prose max-w-none">
+            <p className="text-gray-700 leading-relaxed mb-6">
+              {definition.extract}
+            </p>
+            <a
+              href={definition.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 underline"
+            >
+              Read more on Wikipedia
+            </a>
+          </div>
         </div>
       )}
     </div>

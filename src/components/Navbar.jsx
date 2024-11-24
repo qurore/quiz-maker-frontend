@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FiSettings, FiSearch } from 'react-icons/fi';
 import { RiFileListLine } from 'react-icons/ri';
 import { useState, useRef, useEffect } from 'react';
@@ -9,7 +9,6 @@ function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const settingsRef = useRef(null);
-  const navigate = useNavigate();
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
@@ -51,7 +50,7 @@ function Navbar() {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search word definition..."
+              placeholder="Search technical term..."
               className="w-full px-4 py-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <button
