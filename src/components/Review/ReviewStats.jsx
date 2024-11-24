@@ -1,7 +1,7 @@
 import React from 'react';
-import StatsCard from './StatsCard';
-import SubjectStats from './SubjectStats';
-import ChapterStats from './ChapterStats';
+import StatsCard from 'components/Review/StatsCard';
+import SubjectStats from 'components/Review/SubjectStats';
+import ChapterStats from 'components/Review/ChapterStats';
 
 const ReviewStats = ({ stats }) => {
   if (!stats) return null;
