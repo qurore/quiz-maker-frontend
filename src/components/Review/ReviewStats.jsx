@@ -1,5 +1,7 @@
 import React from 'react';
-import { FiAlertCircle } from 'react-icons/fi';
+import StatsCard from './StatsCard';
+import SubjectStats from './SubjectStats';
+import ChapterStats from './ChapterStats';
 
 const ReviewStats = ({ stats }) => {
   if (!stats) return null;
@@ -10,9 +12,7 @@ const ReviewStats = ({ stats }) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-      {/* Overall Stats */}
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-2">Overall Progress</h3>
+      <StatsCard title="Overall Progress">
         <div className="flex justify-between items-center">
           <div>
             <p className="text-gray-600">Total Questions</p>
@@ -25,47 +25,15 @@ const ReviewStats = ({ stats }) => {
             </p>
           </div>
         </div>
-      </div>
+      </StatsCard>
 
-      {/* Subject Stats */}
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-2">By Subject</h3>
-        <div className="space-y-2">
-          {stats.bySubject.map(subject => (
-            <div key={subject.subjectId} className="flex justify-between items-center">
-              <span className="text-gray-700">{subject.subjectId}</span>
-              <span className={`font-medium ${
-                subject.incorrect / subject.total > 0.5 ? 'text-red-500' : 'text-green-500'
-              }`}>
-                {formatPercentage(subject.incorrect / subject.total)}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+      <StatsCard title="By Subject">
+        <SubjectStats subjects={stats.bySubject} />
+      </StatsCard>
 
-      {/* Chapter Stats */}
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h3 className="text-lg font-semibold mb-2">Top Problem Areas</h3>
-        <div className="space-y-2">
-          {stats.byChapter
-            .sort((a, b) => (b.incorrect / b.total) - (a.incorrect / a.total))
-            .slice(0, 5)
-            .map(chapter => (
-              <div key={`${chapter.subjectId}-${chapter.chapter}`} className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <FiAlertCircle className={`mr-2 ${
-                    chapter.incorrect / chapter.total > 0.7 ? 'text-red-500' : 'text-yellow-500'
-                  }`} />
-                  <span className="text-gray-700">{chapter.chapter}</span>
-                </div>
-                <span className="font-medium text-red-500">
-                  {formatPercentage(chapter.incorrect / chapter.total)}
-                </span>
-              </div>
-            ))}
-        </div>
-      </div>
+      <StatsCard title="Top Problem Areas">
+        <ChapterStats chapters={stats.byChapter} />
+      </StatsCard>
     </div>
   );
 };
