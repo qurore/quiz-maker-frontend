@@ -6,6 +6,8 @@ import Navbar from 'components/Navbar';
 import UserGuide from 'pages/UserGuide';
 import Admin from 'pages/Admin';
 import Review from 'pages/Review';
+import Search from 'pages/Search';
+
 function App() {
   return (
     <Router>
@@ -20,6 +22,7 @@ function App() {
             <Route path="/user-guide" element={<UserGuide />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/review" element={<Review />} />
+            <Route path="/search" element={<Search />} />
           </Routes>
         </main>
       </div>

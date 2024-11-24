@@ -1,6 +1,10 @@
 import React from 'react';
 
-const QuestionFeedback = ({ isCorrect, getCorrectAnswerText, explanation }) => {
+const QuestionFeedback = ({ 
+  isCorrect, 
+  getCorrectAnswerText, 
+  explanation 
+}) => {
   return (
     <div className="mt-4">
       {isCorrect ? (

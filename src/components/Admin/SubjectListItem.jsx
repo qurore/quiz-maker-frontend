@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { FiEdit2, FiTrash2, FiCheck, FiX } from 'react-icons/fi';
 
-function SubjectListItem({ subject, onSave, onDelete }) {
+function SubjectListItem({ 
+  subject, 
+  onSave, 
+  onDelete 
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(subject.name);
 

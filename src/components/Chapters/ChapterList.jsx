@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 
-function ChapterList({ chapters, selectedChapters, onToggleChapter }) {
+function ChapterList({ 
+  chapters, 
+  selectedChapters, 
+  onToggleChapter 
+}) {
   return (
     <div className="grid grid-cols-1 gap-4 mb-6">
       {chapters.map((chapter) => (
