@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Home() {
   const [subjects, setSubjects] = useState([]);
@@ -18,7 +18,11 @@ function Home() {
       <div className="grid grid-cols-1 gap-4">
         {subjects.length === 0 ? (
           <div className="p-4 text-center text-gray-500 bg-gray-50 rounded-lg border border-gray-200">
-            No subjects available. Please upload files to add subjects.
+            No subjects available. Please upload files to add subjects from{' '}
+            <Link to="/admin" className="text-blue-500 hover:text-blue-700 underline">
+              Admin page
+            </Link>
+            .
           </div>
         ) : (
           subjects.map((subject) => (
