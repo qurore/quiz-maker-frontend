@@ -6,6 +6,7 @@ function Search() {
   const [definition, setDefinition] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [notFound, setNotFound] = useState(false);
   const word = searchParams.get('word');
 
   useEffect(() => {
@@ -13,13 +14,20 @@ function Search() {
       if (!word) return;
       
       setLoading(true);
+      setError(null);
+      setNotFound(false);
+      
       try {
         const response = await fetch(`http://localhost:5001/api/wikipedia/${word}`);
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
         const data = await response.json();
-        setDefinition(data);
+        
+        if (response.status === 404) {
+          setNotFound(true);
+        } else if (!response.ok) {
+          throw new Error(data.error || 'Failed to fetch definition');
+        } else {
+          setDefinition(data);
+        }
       } catch (err) {
         setError(err.message || 'Failed to fetch definition');
       } finally {
@@ -44,6 +52,12 @@ function Search() {
       
       {loading && (
         <div className="text-center text-gray-500">Loading definition...</div>
+      )}
+
+      {notFound && (
+        <div className="text-center font-semibold text-gray-800 text-lg">
+          No Wikipedia entry found for "{word}"
+        </div>
       )}
 
       {error && (
