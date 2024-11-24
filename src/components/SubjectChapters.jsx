@@ -76,7 +76,7 @@ function SubjectChapters() {
                   ? 'bg-blue-600'
                   : 'bg-gray-300'
               }`}>
-                {chapter.count}
+                {chapter.count} questions
               </span>
             </div>
           </button>

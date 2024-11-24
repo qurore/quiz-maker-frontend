@@ -32,11 +32,16 @@ function SubjectListItem({ subject, onSave, onDelete }) {
             autoFocus
           />
         ) : (
-          <div className="flex-grow p-2">{subject.name}</div>
+          <div className="flex items-center justify-between flex-grow">
+            <span className="p-2">{subject.name}</span>
+            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+              {subject.questionCount} questions
+            </span>
+          </div>
         )}
       </div>
       
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 ml-4">
         {isEditing ? (
           <>
             <button
