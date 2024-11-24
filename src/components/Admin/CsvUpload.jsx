@@ -67,7 +67,7 @@ function CsvUpload({ onUploadSuccess }) {
         </ul>
         
         <div className="mt-3 text-sm font-medium text-gray-700 bg-gray-100 p-2 rounded">
-          ⚠️ Note: If a Subject with the same name already exists, the existing data will be overwritten.
+          ⚠️ Note: If a Subject with the same name already exists, the existing data will be <strong>overwritten</strong> and incorrect questions will be <strong>deleted</strong>.
         </div>
       </div>
 
