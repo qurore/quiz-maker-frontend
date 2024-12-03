@@ -17,8 +17,8 @@ function SubjectChapters() {
     const fetchData = async () => {
       try {
         const [chaptersResponse, subjectResponse] = await Promise.all([
-          axios.get(`http://localhost:5001/api/subjects/${subjectId}/chapters`),
-          axios.get(`http://localhost:5001/api/subjects/${subjectId}`)
+          axios.get(`http://localhost:5000/api/subjects/${subjectId}/chapters`),
+          axios.get(`http://localhost:5000/api/subjects/${subjectId}`)
         ]);
         setChapters(chaptersResponse.data);
         setSubjectName(subjectResponse.data.name);

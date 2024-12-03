@@ -7,7 +7,7 @@ const SubjectList = forwardRef((props, ref) => {
 
   const fetchSubjects = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/subjects');
+      const response = await axios.get('http://localhost:5000/api/subjects');
       setSubjects(response.data);
     } catch (error) {
       console.error('Error fetching subjects:', error);
@@ -24,7 +24,7 @@ const SubjectList = forwardRef((props, ref) => {
 
   const handleSave = async (id, newName) => {
     try {
-      await axios.put(`http://localhost:5001/api/subjects/${id}`, {
+      await axios.put(`http://localhost:5000/api/subjects/${id}`, {
         name: newName
       });
       fetchSubjects();
@@ -36,7 +36,7 @@ const SubjectList = forwardRef((props, ref) => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this subject?')) {
       try {
-        await axios.delete(`http://localhost:5001/api/subjects/${id}`);
+        await axios.delete(`http://localhost:5000/api/subjects/${id}`);
         fetchSubjects();
       } catch (error) {
         console.error('Error deleting subject:', error);

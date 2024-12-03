@@ -7,7 +7,7 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:5001/api/subjects').then((response) => {
+    axios.get('http://localhost:5000/api/subjects').then((response) => {
       setSubjects(response.data);
     });
   }, []);

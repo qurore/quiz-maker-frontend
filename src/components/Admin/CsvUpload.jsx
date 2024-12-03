@@ -22,7 +22,7 @@ function CsvUpload({ onUploadSuccess }) {
     setUploading(true);
 
     try {
-      await axios.post('http://localhost:5001/api/upload-csv', formData, {
+      await axios.post('http://localhost:5000/api/upload-csv', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

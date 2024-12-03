@@ -28,9 +28,9 @@ function Quiz() {
       try {
         let endpoint;
         if (isReviewQuiz) {
-          endpoint = `http://localhost:5001/api/incorrects?subjectId=${subjectId}&chapters=${selectedChapters.join(',')}`;
+          endpoint = `http://localhost:5000/api/incorrects?subjectId=${subjectId}&chapters=${selectedChapters.join(',')}`;
         } else {
-          endpoint = `http://localhost:5001/api/questions?subjectId=${subjectId}&chapter=${selectedChapters.join(',')}`;
+          endpoint = `http://localhost:5000/api/questions?subjectId=${subjectId}&chapter=${selectedChapters.join(',')}`;
         }
         const response = await axios.get(endpoint);
         let fetchedQuestions = response.data;
@@ -63,7 +63,7 @@ function Quiz() {
     setTotalAnsweredCount(totalAnsweredCount + 1);
     if (isReviewQuiz) {
       try {
-        await axios.delete('http://localhost:5001/api/incorrects', {
+        await axios.delete('http://localhost:5000/api/incorrects', {
           data: {
             subjectId: question.subjectId,
             questionId: question.questionId,
@@ -79,7 +79,7 @@ function Quiz() {
   const handleIncorrect = async (question) => {
     setTotalAnsweredCount(totalAnsweredCount + 1);
     try {
-      await axios.post('http://localhost:5001/api/incorrects', {
+      await axios.post('http://localhost:5000/api/incorrects', {
         subjectId,
         questionId: question.questionId,
         chapter: question.chapter
