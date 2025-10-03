@@ -19,7 +19,7 @@ function Search() {
       setNotFound(false);
       
       try {
-        const response = await axios.get(`http://localhost:5000/api/wikipedia/${word}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/wikipedia/${word}`);
         
         if (response.status === 404) {
           setNotFound(true);
